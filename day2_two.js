@@ -52,20 +52,23 @@ console.assert(processAndGetResult("2,4,4,5,99,0", 5) === 9801);
 console.assert(processAndGetResult("1,1,1,4,99,5,6,0,99", 0) === 30);
 
 
-for (let i = 0; i < 99; i++) {
-    for (let j = 0; j < 99; j++) {
-        let inputSplit = input.split(",");
-        inputSplit[1] = ""+i;
-        inputSplit[2] = ""+j;
+function doStuff() {
+    for (let i = 0; i < 99; i++) {
+        for (let j = 0; j < 99; j++) {
+            let inputSplit = input.split(",");
+            inputSplit[1] = ""+i;
+            inputSplit[2] = ""+j;
 
-        let out = processAndGetResult(inputSplit, 0);
-        if (out === 19690720) {
-            console.log("i: "+i)
-            console.log("j: "+j);
-            console.log("out: " + out);
+            let out = processAndGetResult(inputSplit, 0);
+            if (out === 19690720) {
+                console.log("i: "+i)
+                console.log("j: "+j);
+                console.log("out: " + out);
 
-            console.log(100 * i + j);
-            return;
+                console.log(100 * i + j);
+                return;
+            }
         }
     }
 }
+doStuff();
