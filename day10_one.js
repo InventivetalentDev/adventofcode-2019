@@ -53,7 +53,7 @@ for (let i = 0; i < lines.length; i++) {
     }
     grid[i]=arr;
 }
-console.log(grid);
+console.log(JSON.stringify(grid));
 console.log("Total Asteroids: " + totalAsteroids);
 
 function angleBetweenTwoPoints(a,b) {
