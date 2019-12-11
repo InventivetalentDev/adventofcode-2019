@@ -1,3 +1,4 @@
+// https://github.com/mariotacke/advent-of-code-2019/blob/master/day-10-monitoring-station/station2.js
 let doStuff =(input, stationCoordinates = { x: 0, y: 0}) => {
     const { x: x1, y: y1 } = stationCoordinates;
 
