@@ -3,42 +3,21 @@ let basePattern = [0, 1, 0, -1];
 
 // let process = require("process");
 
-function proc(inp,n=100, m = 1) {
-    let length = inp.length*m;
+async function proc(inp, n = 100, m = 1) {
+    let length = inp.length * m;
     let phase = [];
     let lastPhase = [];
     for (let j = 0; j < n; j++) {
-        console.log("#"+j)
+        console.log("#" + j)
 
+        let promises = [];
         for (let i = 0; i < length; i++) {
             // process.stdout.cursorTo(0);
-            process.stdout.write(i+"/"+length+"\r");
-
-
-            let pattern = [];
-            for (let k = 0; k <basePattern.length; k++) {
-                for (let l = 0; l < i + 1; l++) {
-                    pattern.push(basePattern[k]);
-                }
-            }
-            // pattern.shift();
-
-            // console.log("Pattern: "+pattern);
-            // console.log("Phase: "+phase);
-            let p =0;
-            for (let k = 0; k < length; k++) {
-                // console.log(inp[k%inp.length]+" * "+pattern[((1+k)%pattern.length)])
-                let m = inp[k%inp.length]*pattern[((1+k)%pattern.length)];
-                p+=m;
-            }
-
-            let x = p + "";
-            let x1 = x[x.length - 1];
-            phase[i] = parseInt(x1);
-            // console.log(phase[i]);
-
+            promises.push(processPhase(inp, length, phase, i));
         }
         process.stdout.write("\n"); // end the line
+
+        await Promise.all(promises);
 
 
         console.log(phase.join(""));
@@ -51,32 +30,65 @@ function proc(inp,n=100, m = 1) {
     return lastPhase.join("");
 }
 
-function processWithOffset(inp, n=100, m=1) {
+
+async function processPhase(inp, length, phase, i) {
+    process.stdout.write(i + "/" + length + "\r");
+
+    let pattern = [];
+    for (let k = 0; k < basePattern.length; k++) {
+        for (let l = 0; l < i + 1; l++) {
+            pattern.push(basePattern[k]);
+        }
+    }
+    // pattern.shift();
+
+    // console.log("Pattern: "+pattern);
+    // console.log("Phase: "+phase);
+    let p = 0;
+    for (let k = 0; k < length; k++) {
+        // console.log(inp[k%inp.length]+" * "+pattern[((1+k)%pattern.length)])
+        let m = inp[k % inp.length] * pattern[((1 + k) % pattern.length)];
+        p += m;
+    }
+
+    let x = p + "";
+    let x1 = x[x.length - 1];
+    phase[i] = parseInt(x1);
+    // console.log(phase[i]);
+    return phase[i];
+}
+
+async function processWithOffset(inp, n = 100, m = 1) {
     let s = inp.join("").substring(0, 7);
     console.log(s)
     let offset = parseInt(s);
-    console.log("offset: "+offset)
+    console.log("offset: " + offset)
 
-    let p = proc(inp, n, m);
+    let p = await proc(inp, n, m);
     console.log(p);
 
 
     return p.substring(offset);
 }
 
-// console.assert(process("12345678".split("").map(Number), 1) === "48226158");
-// console.assert(process("12345678".split("").map(Number), 2) === "34040438");
-// console.assert(process("12345678".split("").map(Number), 3) === "03415518");
-// console.assert(process("12345678".split("").map(Number), 4) === "01029498");
+
+
+// console.assert(proc("12345678".split("").map(Number), 1) === "48226158");
+// console.assert(proc("12345678".split("").map(Number), 2) === "34040438");
+// console.assert(proc("12345678".split("").map(Number), 3) === "03415518");
+// console.assert(proc("12345678".split("").map(Number), 4) === "01029498");
 //
-// console.assert(process("80871224585914546619083218645595".split("").map(Number), 100).substring(0, 8) === "24176176");
-// console.assert(process("19617804207202209144916044189917".split("").map(Number), 100).substring(0, 8) === "73745418");
-// console.assert(process("69317163492948606335995924319873".split("").map(Number), 100).substring(0, 8) === "52432133");
+// console.assert(proc("80871224585914546619083218645595".split("").map(Number), 100).substring(0, 8) === "24176176");
+// console.assert(proc("19617804207202209144916044189917".split("").map(Number), 100).substring(0, 8) === "73745418");
 
-let n = processWithOffset("03036732577212944063491565474664".split("").map(Number),100,10000)
-console.log(n)
+// proc("69317163492948606335995924319873".split("").map(Number), 100).then(r=>{
+//     console.assert(r.substring(0, 8) === "52432133");
+// })
 
-// TODO: multi-thread
+processWithOffset("03036732577212944063491565474664".split("").map(Number), 100, 10000).then(n => {
+    console.log(n)
+});
+
 
 // let inp = input.split("").map(Number);
 // let p = process(inp, 100);
